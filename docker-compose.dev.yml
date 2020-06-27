@@ -5,6 +5,9 @@ services:
     build:
       context: .
       dockerfile: ./docker/Dockerfile.dev
+    environment:
+      - MY_LIFF_ID={MY_LIFF_ID}
+      - API_URL={API_URL}
     volumes:
       - ./:/var/www
       - /var/www/node_modules
