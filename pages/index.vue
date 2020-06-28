@@ -4,7 +4,7 @@
       <blockquote class="blockquote">
         It is index page.<br />
         {{ isClient }}<br />
-        {{ userProfile }}<br />
+        <show-user-profile :user-profile="userProfile" />
         {{ occoredError }}
       </blockquote>
     </v-flex>
@@ -12,14 +12,20 @@
 </template>
 
 <script>
+import ShowUserProfile from '~/components/ShowUserProfile'
 const liffId = process.env.MY_LIFF_ID || ''
 const liff = window.liff
 export default {
+  components: {
+    ShowUserProfile
+  },
   data() {
     return {
       liffId: '1654370992-w7jbVe0m',
       isClient: false,
-      userProfile: {},
+      userProfile: {
+        displayName: 'test'
+      },
       occoredError: '特にエラーなし'
     }
   },
