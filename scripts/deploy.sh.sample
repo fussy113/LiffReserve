@@ -1,0 +1,45 @@
+#! /bin/bash
+
+## ----------------------------
+# ユーザからのキーボードの入力を受け取り、
+# yes と入力されたらスクリプトを実行する、no と入力されたらスクリプトを終了します.
+## ----------------------------
+
+function ConfirmExecution() {
+  docker-compose run --rm app yarn generate
+  docker run --rm -it -v ~/.aws:/root/.aws -v $PWD:/aws amazon/aws-cli:2.0.24 s3 sync dist/ s3://#{S3_BUCKET_NAME}/ --delete --dryrun
+
+  echo "----------------------------"
+  echo "デプロイを実行しますか?"
+  echo "  実行する場合は y、実行をキャンセルする場合は n を入力して下さい."
+  read input
+
+  if [ -z $input ] ; then
+
+    echo "  y または n を入力して下さい."
+    ConfirmExecution
+
+  elif [ $input = 'yes' ] || [ $input = 'YES' ] || [ $input = 'y' ] ; then
+
+    echo "  デプロイします."
+
+  elif [ $input = 'no' ] || [ $input = 'NO' ] || [ $input = 'n' ] ; then
+
+    echo "  スクリプトを終了します."
+    exit 1
+
+  else
+
+    echo "  y または n を入力して下さい."
+    ConfirmExecution
+
+  fi
+
+}
+
+# シェルスクリプトの実行を継続するか確認します。
+ConfirmExecution
+
+docker run --rm -it -v ~/.aws:/root/.aws -v $PWD:/aws amazon/aws-cli:2.0.24 s3 sync dist/ s3://#{S3_BUCKET_NAME}/ --delete
+
+docker run --rm -it -v ~/.aws:/root/.aws -v $PWD:/aws amazon/aws-cli:2.0.24 cloudfront create-invalidation --distribution-id #{CLOUDFRONT_ID} --paths '/*'
