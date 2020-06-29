@@ -1,6 +1,7 @@
 <template>
   <div>
-    {{ userProfile.displayName }}
+    {{ userProfile.displayName }}<br />
+    {{ userProfile.userId }}
   </div>
 </template>
 
@@ -10,7 +11,8 @@ export default {
     userProfile: {
       type: Object,
       default: () => ({
-        displayName: 'test'
+        displayName: 'test',
+        userId: ''
       }),
       required: false
     }
