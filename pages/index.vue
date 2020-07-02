@@ -2,16 +2,16 @@
   <v-row>
     <v-col cols="12">
       <show-user-profile :user-profile="userProfile" />
-      choiceNo:{{ choiceNo }}
+      choiceNum:{{ choiceNum }}
       {{ occoredError }}
       <select-number
         :select-liff-line="selectLiffLile"
-        @input="choiceNo = $event"
+        @input="choiceNum = $event"
       />
       <v-dialog v-model="dialog" width="500">
         <template v-slot:activator="{ on, attrs }">
           <v-btn
-            v-show="choiceNo"
+            v-show="choiceNum"
             color="red
             lighten-2"
             v-bind="attrs"
@@ -79,7 +79,7 @@ export default {
           }
         }
       },
-      choiceNo: '',
+      choiceNum: '',
       occoredError: ''
     }
   },
@@ -109,7 +109,7 @@ export default {
       const postData = {
         reserve_data: {
           user_id: this.userProfile.userId,
-          choice_no: this.choiceNo,
+          choice_num: this.choiceNum,
           created_at: this.$dayjs().format('YYYY/MM/DD HH:mm:ss')
         }
       }
