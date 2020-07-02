@@ -1,8 +1,10 @@
 <template>
-  <div>
-    {{ userProfile.displayName }}<br />
-    {{ userProfile.userId }}
-  </div>
+  <v-row>
+    <v-col col="12">
+      name:{{ userProfile.displayName }}<br />
+      userId:{{ userProfile.userId }}
+    </v-col>
+  </v-row>
 </template>
 
 <script>
