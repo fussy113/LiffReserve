@@ -9,7 +9,14 @@
       </blockquote>
       <v-dialog v-model="dialog" width="500">
         <template v-slot:activator="{ on, attrs }">
-          <v-btn color="red lighten-2" dark v-bind="attrs" v-on="on">
+          <v-btn
+            color="red
+            lighten-2"
+            dark
+            v-bind="attrs"
+            v-on="on"
+            @click="sendRequest"
+          >
             Send
           </v-btn>
         </template>
@@ -38,6 +45,7 @@
 
 <script>
 import ShowUserProfile from '~/components/ShowUserProfile'
+import SelectNumber from '~/components/SelectNumber'
 const liffId = process.env.MY_LIFF_ID || ''
 const liff = window.liff
 export default {
@@ -50,8 +58,9 @@ export default {
       dialog: false,
       userProfile: {
         displayName: 'test',
-        userId: ''
+        userId: 'test'
       },
+      choiceNo: 0,
       occoredError: '特にエラーなし'
     }
   },
@@ -59,8 +68,6 @@ export default {
     liff
       .init({ liffId })
       .then(() => {
-        // Start to use liff's api
-        console.log('success')
         this.isClient = liff.isInClient()
         if (liff.isLoggedIn()) {
           liff
@@ -75,13 +82,26 @@ export default {
       })
       .catch((err) => {
         // Error happens during initialization
-        console.log(err.code, err.message)
+        this.occoredError = 'error:' + err
       })
   },
   methods: {
-    sendRequest() {
-      // TODO: ここにAPI送信処理
-      console.log('clicked')
+    async sendRequest() {
+      const postData = {
+        reserve_data: {
+          user_id: this.userProfile.userId,
+          choice_no: this.choiceNo,
+          created_at: this.$dayjs().format('YYYY/MM/DD HH:mm:ss')
+        }
+      }
+      console.log(postData)
+      const response = await this.$axios.$post(
+        this.$axios.defaults.baseURL,
+        postData
+      )
+      if (response.statusCode !== 200) {
+        this.occoredError = response
+      }
     },
     closeLiffWindow() {
       liff.closeWindow()
