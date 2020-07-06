@@ -92,6 +92,7 @@ export default {
           liff
             .getProfile()
             .then((profile) => {
+              profile.user_id = profile.user_id.substr(0, 5) // デモ用
               this.userProfile = profile
             })
             .catch((err) => {
